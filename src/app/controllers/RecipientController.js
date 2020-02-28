@@ -18,13 +18,14 @@ class RecipientController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { name } = req.body;
-    const recipient = await Recipient.findOne({ where: { name } });
-    if (recipient) {
-      return res.json({ error: 'Recipient already exists' });
-    }
+    // const { name } = req.body;
+    // const recipient = await Recipient.findOne({ where: { name } });
+    // if (recipient) {
+    //   return res.json({ error: 'Recipient already exists' });
+    // }
 
     const {
+      name,
       street,
       street_number,
       complement,
@@ -48,7 +49,7 @@ class RecipientController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
       street: Yup.string(),
       street_number: Yup.number(),
       complement: Yup.string(),
@@ -61,13 +62,14 @@ class RecipientController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { name } = req.body;
-    const recipient = await Recipient.findOne({ where: { name } });
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id);
     if (!recipient) {
       return res.json({ error: 'Recipient not found' });
     }
 
     const {
+      name,
       street,
       street_number,
       complement,
