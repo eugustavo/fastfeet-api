@@ -9,12 +9,6 @@ class Order extends Model {
         canceled_at: Sequelize.DATE,
         start_date: Sequelize.DATE,
         end_date: Sequelize.DATE,
-        // cancelable: {
-        //   type: Sequelize.VIRTUAL,
-        //   get() {
-        //     return isBefore(new Date(), subHours(this.date, 2));
-        //   },
-        // },
       },
       { sequelize }
     );

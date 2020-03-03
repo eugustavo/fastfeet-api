@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 import Order from '../models/Order';
 import File from '../models/File';
 import Deliveryman from '../models/Deliveryman';
@@ -75,6 +76,7 @@ class OrderController {
   async update(req, res) {
     const { id } = req.params;
     const order = await Order.findByPk(id);
+    const avaiable = format(new Date(), 'HH');
 
     if (!order) {
       return res.status(400).json({ error: 'Order not found' });
@@ -86,11 +88,31 @@ class OrderController {
         .json({ error: 'Order has already been withdrawn' });
     }
 
+    if (!(avaiable > 8 && avaiable < 18)) {
+      return res
+        .status(401)
+        .json({ error: 'Order can only be withdrawn from 8am to 6pm' });
+    }
+
     order.start_date = new Date();
 
     order.save();
 
     return res.json(order);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+    if (!order) {
+      return res.status(400).json({ error: 'Order not found' });
+    }
+
+    order.end_date = new Date();
+
+    order.save();
+    return res.status(200).json();
   }
 }
 
