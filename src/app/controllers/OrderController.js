@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 import Order from '../models/Order';
 import File from '../models/File';
 import Deliveryman from '../models/Deliveryman';
@@ -88,10 +89,27 @@ class OrderController {
         .json({ error: 'Order has already been withdrawn' });
     }
 
-    if (!(avaiable > 8 && avaiable < 18)) {
+    if (!(avaiable > 8 && avaiable < 22)) {
       return res
         .status(401)
         .json({ error: 'Order can only be withdrawn from 8am to 6pm' });
+    }
+
+    const deliveryman = await Deliveryman.findByPk(order.deliveryman_id);
+
+    const withdrawnDeliveries = await Order.findAll({
+      where: {
+        start_date: {
+          [Op.between]: [startOfDay(new Date()), endOfDay(new Date())],
+        },
+        deliveryman_id: deliveryman.id,
+      },
+    });
+
+    if (withdrawnDeliveries.length > 4) {
+      return res
+        .status(401)
+        .json({ error: 'Maximum number of withdrawals exceeded' });
     }
 
     order.start_date = new Date();

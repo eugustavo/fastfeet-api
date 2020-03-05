@@ -6,7 +6,6 @@ class Deliveryman extends Model {
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
-        withdrawals: Sequelize.VIRTUAL,
       },
       { sequelize }
     );
