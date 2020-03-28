@@ -11,12 +11,56 @@ import Queue from '../../lib/Queue';
 
 class OrderController {
   async index(req, res) {
-    const { page } = req.query;
+    const { page, findProduct } = req.query;
+
+    if (findProduct) {
+      const orders = await Order.findAll({
+        where: {
+          product: {
+            [Op.iLike]: `%${findProduct}%`,
+          },
+        },
+        attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
+        limit: 10,
+        offset: (page - 1) * 10,
+        include: [
+          {
+            model: Recipient,
+            as: 'recipient',
+            attributes: [
+              'name',
+              'street',
+              'street_number',
+              'city',
+              'state',
+              'complement',
+              'zipcode',
+            ],
+          },
+          {
+            model: Deliveryman,
+            as: 'deliveryman',
+            attributes: ['name', 'email'],
+          },
+          {
+            model: File,
+            as: 'signature',
+            attributes: ['name', 'path', 'url'],
+          },
+        ],
+      });
+
+      if (!orders) {
+        return res.status(400).json({ error: 'Product not found' });
+      }
+
+      return res.json(orders);
+    }
 
     const orders = await Order.findAll({
-      attributes: ['id', 'product'],
-      limit: 20,
-      offset: (page - 1) * 20,
+      attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
+      limit: 10,
+      offset: (page - 1) * 10,
       include: [
         {
           model: Recipient,
@@ -43,6 +87,10 @@ class OrderController {
         },
       ],
     });
+
+    if (!orders) {
+      return res.status(400).json({ error: 'Product not found' });
+    }
 
     return res.json(orders);
   }

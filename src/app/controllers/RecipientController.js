@@ -1,8 +1,62 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Recipient from '../models/Recipient';
 
 class RecipientController {
+  async index(req, res) {
+    const { page, findRecipient } = req.query;
+
+    if (findRecipient) {
+      const recipient = await Recipient.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${findRecipient}%`,
+          },
+        },
+        attributes: [
+          'id',
+          'name',
+          'street',
+          'street_number',
+          'complement',
+          'state',
+          'city',
+          'zipcode',
+        ],
+        limit: 10,
+        offset: (page - 1) * 10,
+      });
+
+      if (!recipient) {
+        return res.status(400).json({ error: 'Recipient not found' });
+      }
+
+      return res.json(recipient);
+    }
+
+    const recipient = await Recipient.findAll({
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'street_number',
+        'complement',
+        'state',
+        'city',
+        'zipcode',
+      ],
+      limit: 10,
+      offset: (page - 1) * 10,
+    });
+
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient not found' });
+    }
+
+    return res.json(recipient);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -17,12 +71,6 @@ class RecipientController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
-
-    // const { name } = req.body;
-    // const recipient = await Recipient.findOne({ where: { name } });
-    // if (recipient) {
-    //   return res.json({ error: 'Recipient already exists' });
-    // }
 
     const {
       name,
