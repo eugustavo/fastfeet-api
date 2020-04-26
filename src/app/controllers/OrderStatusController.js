@@ -4,8 +4,9 @@ import Order from '../models/Order';
 class OrderStatusController {
   async update(req, res) {
     const schema = Yup.object().shape({
-      start_date: Yup.date().required(),
+      start_date: Yup.date(),
       end_date: Yup.date(),
+      canceled_at: Yup.date(),
       signature_id: Yup.number().when('end_date', (end_date, field) =>
         end_date ? field.required() : field
       ),

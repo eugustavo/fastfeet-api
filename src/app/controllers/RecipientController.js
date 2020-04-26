@@ -24,8 +24,11 @@ class RecipientController {
           'city',
           'zipcode',
         ],
-        limit: 10,
-        offset: (page - 1) * 10,
+        limit: 8,
+        offset: (page - 1) * 8,
+        order: [
+          ['id', 'ASC']
+        ],
       });
 
       if (!recipient) {
@@ -46,8 +49,11 @@ class RecipientController {
         'city',
         'zipcode',
       ],
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: 8,
+      offset: (page - 1) * 8,
+      order: [
+        ['id', 'ASC']
+      ],
     });
 
     if (!recipient) {

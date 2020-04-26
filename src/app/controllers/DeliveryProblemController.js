@@ -9,8 +9,14 @@ import Queue from '../../lib/Queue';
 
 class DeliveryProblemController {
   async index(req, res) {
+    const { page } = req.query;
     const deliveryproblems = await DeliveryProblem.findAll({
       attributes: ['id', 'delivery_id', 'description'],
+      limit: 8,
+      offset: (page - 1) * 8,
+      order: [
+        ['id', 'ASC']
+      ],
     });
 
     return res.json(deliveryproblems);

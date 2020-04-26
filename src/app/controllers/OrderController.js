@@ -21,8 +21,11 @@ class OrderController {
           },
         },
         attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
-        limit: 10,
-        offset: (page - 1) * 10,
+        limit: 8,
+        offset: (page - 1) * 8,
+        order: [
+          ['id', 'ASC']
+        ],
         include: [
           {
             model: Recipient,
@@ -57,17 +60,16 @@ class OrderController {
         ],
       });
 
-      if (!orders) {
-        return res.status(400).json({ error: 'Product not found' });
-      }
-
       return res.json(orders);
     }
 
     const orders = await Order.findAll({
       attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: 8,
+      offset: (page - 1) * 8,
+      order: [
+        ['id', 'ASC']
+      ],
       include: [
         {
           model: Recipient,
@@ -189,9 +191,9 @@ class OrderController {
       return res.status(400).json({ error: 'Order not found' });
     }
 
-    order.end_date = new Date();
-
+    order.destroy();
     order.save();
+
     return res.status(200).json();
   }
 }
