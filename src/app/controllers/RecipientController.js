@@ -26,9 +26,7 @@ class RecipientController {
         ],
         limit: 8,
         offset: (page - 1) * 8,
-        order: [
-          ['id', 'ASC']
-        ],
+        order: [['id', 'ASC']],
       });
 
       if (!recipient) {
@@ -51,9 +49,7 @@ class RecipientController {
       ],
       limit: 8,
       offset: (page - 1) * 8,
-      order: [
-        ['id', 'ASC']
-      ],
+      order: [['id', 'ASC']],
     });
 
     if (!recipient) {
@@ -143,6 +139,20 @@ class RecipientController {
         zipcode,
       },
     });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const recipient = await Recipient.findByPk(id);
+    if (!recipient) {
+      return res.status(400).json({ error: 'Order not found' });
+    }
+
+    recipient.destroy();
+    recipient.save();
+
+    return res.status(200).json();
   }
 }
 

@@ -14,9 +14,7 @@ class DeliveryProblemController {
       attributes: ['id', 'delivery_id', 'description'],
       limit: 8,
       offset: (page - 1) * 8,
-      order: [
-        ['id', 'ASC']
-      ],
+      order: [['id', 'ASC']],
     });
 
     return res.json(deliveryproblems);

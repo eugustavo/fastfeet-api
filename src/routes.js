@@ -10,6 +10,7 @@ import DeliveryViewController from './app/controllers/DeliveryViewController';
 import HandedController from './app/controllers/HandedController';
 import OrderController from './app/controllers/OrderController';
 import OrderStatusController from './app/controllers/OrderStatusController';
+import OrderEditController from './app/controllers/OrderEditController';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
@@ -21,7 +22,7 @@ routes.post('/users', SessionController.store);
 
 routes.get('/deliveryman/:id/deliveries', DeliveryViewController.index);
 routes.get('/deliveryman/:id/handed', HandedController.index);
-routes.post('/order/:id/status', OrderStatusController.update);
+routes.put('/order/:id/status', OrderStatusController.update);
 
 routes.post('/delivery/:id/problems', DeliveryProblemController.store);
 
@@ -30,6 +31,7 @@ routes.use(authMiddleware);
 routes.get('/recipients', RecipientController.index);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
+routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.get('/deliverymans', DeliverymanController.index);
 routes.post('/deliverymans', DeliverymanController.store);
@@ -39,6 +41,7 @@ routes.delete('/deliverymans/:id', DeliverymanController.delete);
 routes.get('/orders', OrderController.index);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
+routes.put('/edit-order/:id', OrderEditController.update);
 routes.delete('/orders/:id', OrderController.delete);
 
 routes.get('/deliveryproblem', DeliveryProblemController.index);

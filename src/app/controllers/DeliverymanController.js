@@ -17,14 +17,12 @@ class DeliverymanController {
         attributes: ['id', 'name', 'email'],
         limit: 8,
         offset: (page - 1) * 8,
-        order: [
-          ['id', 'ASC']
-        ],
+        order: [['id', 'ASC']],
         include: [
           {
             model: File,
             as: 'avatar',
-            attributes: ['name', 'path', 'url'],
+            attributes: ['id', 'name', 'path', 'url'],
           },
         ],
       });
@@ -40,14 +38,12 @@ class DeliverymanController {
       attributes: ['id', 'name', 'email'],
       limit: 8,
       offset: (page - 1) * 8,
-      order: [
-        ['id', 'ASC']
-      ],
+      order: [['id', 'ASC']],
       include: [
         {
           model: File,
           as: 'avatar',
-          attributes: ['name', 'path', 'url'],
+          attributes: ['id', 'name', 'path', 'url'],
         },
       ],
     });
@@ -94,17 +90,20 @@ class DeliverymanController {
     const { email } = req.body;
     const { id } = req.params;
 
-    const deliverymanExist = await Deliveryman.findByPk(id);
-    if (!deliverymanExist) {
+    const deliveryman = await Deliveryman.findByPk(id);
+    if (!deliveryman) {
       return res.status(400).json({ error: 'Deliveryman not found' });
     }
 
-    const emailExist = await Deliveryman.findOne({ where: { email } });
-    if (emailExist) {
-      return res.status(401).json({ error: 'Informed email already exists' });
+    if (email && email !== deliveryman.email) {
+      const emailExist = await Deliveryman.findOne({ where: { email } });
+
+      if (emailExist) {
+        return res.status(401).json({ error: 'Informed email already exists' });
+      }
     }
 
-    const { name, avatar_id } = await deliverymanExist.update(req.body);
+    const { name, avatar_id } = await deliveryman.update(req.body);
 
     return res.json({ id, name, email, avatar_id });
   }

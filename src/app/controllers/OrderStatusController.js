@@ -33,6 +33,9 @@ class OrderStatusController {
         .status(401)
         .json({ error: 'Delivery date already registered' });
     }
+    if (order.canceled_at) {
+      return res.status(401).json({ error: 'Cancel date already registered' });
+    }
 
     order.update(req.body);
     order.save();

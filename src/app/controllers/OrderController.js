@@ -23,14 +23,13 @@ class OrderController {
         attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
         limit: 8,
         offset: (page - 1) * 8,
-        order: [
-          ['id', 'ASC']
-        ],
+        order: [['id', 'ASC']],
         include: [
           {
             model: Recipient,
             as: 'recipient',
             attributes: [
+              'id',
               'name',
               'street',
               'street_number',
@@ -43,7 +42,7 @@ class OrderController {
           {
             model: Deliveryman,
             as: 'deliveryman',
-            attributes: ['name', 'email'],
+            attributes: ['id', 'name', 'email'],
             include: [
               {
                 model: File,
@@ -67,14 +66,13 @@ class OrderController {
       attributes: ['id', 'product', 'start_date', 'end_date', 'canceled_at'],
       limit: 8,
       offset: (page - 1) * 8,
-      order: [
-        ['id', 'ASC']
-      ],
+      order: [['id', 'ASC']],
       include: [
         {
           model: Recipient,
           as: 'recipient',
           attributes: [
+            'id',
             'name',
             'street',
             'street_number',
@@ -87,7 +85,7 @@ class OrderController {
         {
           model: Deliveryman,
           as: 'deliveryman',
-          attributes: ['name', 'email'],
+          attributes: ['id', 'name', 'email'],
           include: [
             {
               model: File,
@@ -153,6 +151,7 @@ class OrderController {
         .json({ error: 'Order has already been withdrawn' });
     }
 
+    // TROCAR DEPOIS PARA 18h
     if (!(avaiable > 8 && avaiable < 22)) {
       return res
         .status(401)
