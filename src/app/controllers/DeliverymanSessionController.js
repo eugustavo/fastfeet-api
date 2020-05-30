@@ -2,7 +2,9 @@ import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
 import authConfig from '../../config/auth';
+
 import Deliveryman from '../models/Deliveryman';
+import File from '../models/File';
 
 class DeliverymanSessionController {
   async store(req, res) {
@@ -16,20 +18,28 @@ class DeliverymanSessionController {
 
     const { id } = req.body;
 
-    const deliveryman = await Deliveryman.findOne({ where: { id } });
+    const deliveryman = await Deliveryman.findOne({
+      where: { id },
+      attributes: ['id', 'name', 'email', 'created_at'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'name', 'path', 'url'],
+        },
+      ],
+    });
 
     if (!deliveryman) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const { name, email } = deliveryman;
+    // const { name, email, avatar_id } = deliveryman;
+
+    // const avatar = await File.findByPk({ avatar_id });
 
     return res.json({
-      deliveryman: {
-        id,
-        name,
-        email,
-      },
+      deliveryman,
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),

@@ -13,6 +13,7 @@ import OrderStatusController from './app/controllers/OrderStatusController';
 import OrderEditController from './app/controllers/OrderEditController';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 import DeliverymanSessionController from './app/controllers/DeliverymanSessionController';
+import DeliveryViewProblemController from './app/controllers/DeliveryViewProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -41,6 +42,7 @@ routes.put('/edit-order/:id', OrderEditController.update);
 routes.delete('/orders/:id', OrderController.delete);
 
 routes.get('/deliveryproblem', DeliveryProblemController.index);
+routes.get('/deliveryproblem/:id', DeliveryViewProblemController.index);
 routes.get('/deliveryproblem/:id/problem', DeliveryProblemController.show);
 routes.get('/deliveryman/:id/deliveries', DeliveryViewController.index);
 routes.get('/deliveryman/:id/handed', HandedController.index);
