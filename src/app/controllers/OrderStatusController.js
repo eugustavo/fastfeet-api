@@ -23,17 +23,17 @@ class OrderStatusController {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    if (order.start_date) {
+    if (req.body.start_date && order.start_date) {
       return res
         .status(401)
         .json({ error: 'Withdrawal date already registered' });
     }
-    if (order.end_date) {
+    if (req.body.end_date && order.end_date) {
       return res
         .status(401)
         .json({ error: 'Delivery date already registered' });
     }
-    if (order.canceled_at) {
+    if (req.body.canceled_at && order.canceled_at) {
       return res.status(401).json({ error: 'Cancel date already registered' });
     }
 
