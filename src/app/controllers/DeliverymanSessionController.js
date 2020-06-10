@@ -34,10 +34,6 @@ class DeliverymanSessionController {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // const { name, email, avatar_id } = deliveryman;
-
-    // const avatar = await File.findByPk({ avatar_id });
-
     return res.json({
       deliveryman,
       token: jwt.sign({ id }, authConfig.secret, {

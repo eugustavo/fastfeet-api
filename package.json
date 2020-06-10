@@ -7,9 +7,13 @@
     "dev": "nodemon src/server.js",
     "queue": "nodemon src/queue.js",
     "dev:debug": "nodemon --inspect src/server.js",
+
     "build": "sucrase ./src -d ./dist --transforms imports",
     "start": "node dist/server.js",
-    "test": "jest"
+
+    "pretest": "set NODE_ENV=test && sequelize db:migrate && sequelize db:seed:all",
+    "test": "set NODE_ENV=test && jest --detectOpenHandles --forceExit",
+    "posttest": "set NODE_ENV=test && sequelize db:migrate:undo:all"
   },
   "dependencies": {
     "@sentry/node": "5.13.0",
